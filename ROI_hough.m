@@ -1,6 +1,6 @@
 %aplica o linear hough para detetar as linhas da imagem e assim defenir a
 %mascara a utilizar
-function [mask, right_limit, bottom_limit] = ROI_hough (I)
+function mask = ROI_hough (I)
 
 %"processamento" da imagem (ver nome)
 Image_gray=im2gray(I);
@@ -26,19 +26,20 @@ lines = houghlines(Image_final, theta, rho, P);
 % title('Linhas detetadas pela transformada de Hough');
 
 %criação da máscara
-[m,n] = size(Image_bottom);
-background = zeros(m,n);
+background = Image_bottom;
+background(:,:)=0;
 
 figure;
 imshow(background);
 hold on;
 
 for k = 1:length(lines)
-xy = [lines(k).point1; lines(k).point2];
-plot(xy(:,1), xy(:,2), 'LineWidth', 2, 'Color','white');
+    xy = [lines(k).point1; lines(k).point2];
+    plot(xy(:,1), xy(:,2), 'LineWidth', 2, 'Color','white');
 end
 
 hold off;
+
 frame = getframe;
 box_inicial = frame.cdata;
 
@@ -51,18 +52,4 @@ mask = imopen(box_filled,SE2);
 % title('ROI final');
 % imshow(mask);
 
-count_x=1;
-count_y=1;
-for n = 1:length(lines)
-    if (lines(n).point1(1)==lines(n).point2(1))
-        x_values(count_x) = lines(n).point1(1);
-        count_x=count_x+1;
-    elseif(lines(n).point1(2)==lines(n).point2(2))
-        y_values(count_y) = lines(n).point1(2);
-        count_y=count_y+1;
-    end
-end
-
-right_limit = max(x_values);
-bottom_limit = min(y_values);
 end
