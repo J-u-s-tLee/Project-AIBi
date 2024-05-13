@@ -12,7 +12,12 @@ for i=1:size
     close; %ver se da para nao abrir imagem de todo
 end
 
-%% parte 1 - Leandro
+%% parte 1 - Morphological Filters
+ROI_morph = cell(1,size);
+for i=1:size
+    Image = im2double(image_vector{2}{i}); 
+    ROI_morph{i} = MorphologicalFilters(Image);
+end
 
 %% pate 2 - com ROI GT
 evaluation = zeros(size,6);
