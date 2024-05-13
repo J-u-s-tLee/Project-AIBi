@@ -29,21 +29,12 @@ lines = houghlines(Image_final, theta, rho, P);
 background = Image_bottom;
 background(:,:)=0;
 
-figure;
-imshow(background);
-hold on;
-
 for k = 1:length(lines)
     xy = [lines(k).point1; lines(k).point2];
-    plot(xy(:,1), xy(:,2), 'LineWidth', 2, 'Color','white');
+    background = insertShape(background, 'Line', [xy(1,1) xy(1,2) xy(2,1) xy(2,2)], 'Color', 'white', 'LineWidth', 2);
 end
 
-hold off;
-
-frame = getframe;
-box_inicial = frame.cdata;
-
-box_gray = im2gray(box_inicial);
+box_gray = im2gray(background);
 box_bin = imbinarize(box_gray);
 box_filled = imfill(box_bin,'holes');
 SE2=strel('disk',3);
