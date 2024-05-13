@@ -48,7 +48,11 @@ if (~isempty(locations))
     recall = TP / (TP + FN);
     precision = TP / (TP + FP);
     beta = 1;
-    F_measure = ((beta^2+1)*precision*recall)/((beta^2)*precision+recall);
+    if (precision == 0 && recall == 0)
+        F_measure = 0; 
+    else
+        F_measure = ((beta^2+1)*precision*recall)/((beta^2)*precision+recall);
+    end
 else
     TP=0;
     FP=0;
