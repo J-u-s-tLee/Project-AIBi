@@ -32,14 +32,12 @@ std_evaluation = zeros(1,6);
 for n=1:6
     std_evaluation(1,n) = std(evaluation(:,n));
 end
-Evaluation_table = table (average_evaluation(1), average_evaluation(2), average_evaluation(3), average_evaluation(4), average_evaluation(5), average_evaluation(6));
-%% agora - acabar
-Evaluation_table = addrow (Evaluation_table, [std_evaluation(1),std_evaluation(2), std_evaluation(3), std_evaluation(4), std_evaluation(5), std_evaluation(6)]);
+
+Evaluation_table = [average_evaluation(1), average_evaluation(2), average_evaluation(3), average_evaluation(4), average_evaluation(5), average_evaluation(6); std_evaluation(1),std_evaluation(2), std_evaluation(3), std_evaluation(4), std_evaluation(5), std_evaluation(6)];
+Evaluation_table = array2table(Evaluation_table);
 Evaluation_table.Properties.VariableNames = {'TP', 'FP', 'FN', 'recall', 'precision', 'F_measure'};
 Evaluation_table.Properties.RowNames = {'average', 'standart desviation'};
-
 disp (Evaluation_table);
-% por media e desvio dos valores da evaluation em tabela bonita!!!
 
 %% extra
 evaluation_extra = zeros(size,6);
