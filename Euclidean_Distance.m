@@ -2,17 +2,22 @@ function [Mean, Max] = Euclidean_Distance(ROI, ROI_GT)
 
 % Label the image.
 [labeledImage, ~] = bwlabel(ROI);
+
 % Find the centroid
 measurements = regionprops(labeledImage, 'Centroid');
+
 % Put a cross at the centroid.
 xCentroid = measurements.Centroid(1);
 yCentroid = measurements.Centroid(2);
+
 % Find out how far the centroid is from points in each quadrant
 % First get all the points.
-[rows, columns] = find(teste_close2);
+[rows, columns] = find(ROI);
+
 xCorners = [0 0 0 0]; % X coordinate of corners in each quadrant.
 yCorners = [0 0 0 0]; % X coordinate of corners in each quadrant.
 maxDistance = [0 0 0 0]; % Distance of furthers X coordinate from centroid in each quadrant.
+
 for k = 1 : length(columns)
   rowk = rows(k);
   colk = columns(k);
@@ -69,7 +74,7 @@ xCentroid = measurements.Centroid(1);
 yCentroid = measurements.Centroid(2);
 % Find out how far the centroid is from points in each quadrant
 % First get all the points.
-[rows, columns] = find(teste_box);
+[rows, columns] = find(ROI_GT);
 xCorners = [0 0 0 0]; % X coordinate of corners in each quadrant.
 yCorners = [0 0 0 0]; % X coordinate of corners in each quadrant.
 maxDistance = [0 0 0 0]; % Distance of furthers X coordinate from centroid in each quadrant.
