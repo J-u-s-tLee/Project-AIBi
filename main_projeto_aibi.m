@@ -1,3 +1,4 @@
+%% inicial
 clear;clc;close all;
 pasta = 'C:\Users\maria\OneDrive\Documentos\MATLAB\Train1';
 image_vector = read_data(pasta);
@@ -12,30 +13,25 @@ for i=1:size
     close; %ver se da para nao abrir imagem de todo
 end
 
-%% parte 1 - Morphological Filters
-ROI_morph = cell(1,size);
-for i=1:size
-    Image = im2double(image_vector{2}{i}); 
-    ROI_morph{i} = MorphologicalFilters(Image);
-end
+%% parte 1 - Leandro
 
 %% pate 2 - com ROI GT
-evaluation = zeros(size,6);
+evaluation = zeros(size,7);
 for i=1:size
     Image = image_vector{2}{i};
     mask=image_vector{3}{i};
     [Image_segmented, locations] = segmentation (Image, mask); %por quadrados em vez de circulos!!!
     cell_location_gt = image_vector{1}{i};
     gt_locations = cell_location_gt.cellLocationsData;
-    [TP, FP, FN, recall, precision, F_measure] = segmentation_evaluation(gt_locations,locations);
-    evaluation(i,:) = [TP, FP, FN, recall, precision, F_measure];
+    [counted_cells, TP, FP, FN, recall, precision, F_measure] = segmentation_evaluation(gt_locations,locations);
+    evaluation(i,:) = [counted_cells, TP, FP, FN, recall, precision, F_measure];
 end
 
 Evaluation_table = evaluation_table(evaluation);
 disp (Evaluation_table);
 
 %% parte 2 - com ROI Hough
-evaluation_extra = zeros(size,6);
+evaluation_extra = zeros(size,7);
 for i=1:size
     Image = image_vector{2}{i};
     mask = mask_vector{i};
@@ -53,7 +49,7 @@ disp (Evaluation_table);
 
 %% parte 2 - com ROI Leandro
 Image = image_vector{2}{8};
-mask = mask_vector{8};
+mask = 
 [Image_segmented, locations] = segmentation (Image, mask);
 figure;
 imshow(Image_segmented);
@@ -65,7 +61,7 @@ mask_gt = image_vector{3}{8};
 figure;
 imshow(Image_segmented_GT);
 title('Segmentação com ROI GT');
-mask_hough = mask_vector{8};
+mask_hough = ROI_hough(Image);
 figure;
 imshow(mask_hough);
 title('ROI com Hough');

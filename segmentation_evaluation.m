@@ -1,4 +1,4 @@
-function [TP, FP, FN, recall, precision, F_measure] = segmentation_evaluation(gt_locations, locations)
+function [counted_cells, TP, FP, FN, recall, precision, F_measure] = segmentation_evaluation(gt_locations, locations)
 % Funçao que compara as bounding boxes determinadas pelo código e
 % fornecidas pela docente, considerando as últimas como GT.
 % Devolve os valores de verdadeiros positivos (TP), falsos positiovs (FP),
@@ -7,7 +7,7 @@ function [TP, FP, FN, recall, precision, F_measure] = segmentation_evaluation(gt
 
 if (~isempty(locations))
     TP = 0; % Inicializar contador de verdadeiros positivos
-    positives = length(locations(:,1));
+    counted_cells = length(locations(:,1));
 
     % Calcular o índice de Jaccard para cada par de objetos nas duas imagens
     for i = 1:length(gt_locations(:,1))
@@ -51,7 +51,7 @@ if (~isempty(locations))
     end
     
     %Cálculo dos restantes valores
-    FP = positives-TP;
+    FP = counted_cells-TP;
     FN = length(gt_locations(:,1))- TP;
     recall = TP / (TP + FN);
     precision = TP / (TP + FP);
@@ -63,6 +63,7 @@ if (~isempty(locations))
     end
 else
     %se não houver células detetadas, considerar todos os valores nulos
+    counted_cells=0;
     TP=0;
     FP=0;
     FN=0;
