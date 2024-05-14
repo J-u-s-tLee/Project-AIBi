@@ -11,7 +11,9 @@ SE1 = strel('square', 25);
 Image_bothat = imbothat(Image_gray, SE1);
 T = multithresh(Image_bothat, 4);
 Image_thresh = imquantize(Image_bothat, T);
-[centers, radii] = imfindcircles(Image_thresh == 3, [15 800]); %deteção das células
+
+%Deteção das células
+[centers, radii] = imfindcircles(Image_thresh == 3, [15 800]); 
 
 % Se o extremo direito ou extremo baixo do circulo estiver fora da ROI,
 % então a célula não deve ser detetada.
