@@ -35,7 +35,7 @@ end
 %Criação da imagem com bounding boxes desenhadas
 %e vetor com localizações das bounding boxes
 figure(1);
-imshow(Image,[]);
+imshow(Image_gray,[]);
 hold on;
 
 if (~isempty(centers))
