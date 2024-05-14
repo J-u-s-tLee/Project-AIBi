@@ -1,8 +1,9 @@
+ function vetores_de_imagens = read_data(pasta_principal)
 % Criação de um vetor de 3 vetores de imagens onde são armazendas 
-% todas as imagens originais, os GT do ROI e os GT da segmentaçao 
-function vetores_de_imagens = read_data(pasta_principal)
+% todas as imagens originais, os GT do ROI e os GT da segmentaçao
+
 subpastas = {'cells1', 'images1', 'ROIs1'};
-vetores_de_imagens = cell(1,3);
+vetores_de_imagens = cell(1,3); %inicialização da variável a devolver
 
 for k = 1:3
     pasta_atual = fullfile(pasta_principal, subpastas{k});% Caminho completo para a subpasta atual
