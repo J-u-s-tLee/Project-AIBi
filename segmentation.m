@@ -1,8 +1,7 @@
-function [Image_segmented, locations] = segmentation (Image, mask)
+function [locations] = segmentation (Image, mask)
 %Função que, após pré-processamento da imagem, deteta as células na região 
-%de interesse e cria bounding box à volta das mesmas.
-%Devolve imagem original marcada nas células detetadas 
-%e localização e coordenadas da bounding box
+%de interesse e determina as bounding boxes à volta das mesmas.
+%Devolve a localização e coordenadas das bounding boxes
 
 %Pré-processamento
 Image_gray = im2gray(Image);
@@ -32,12 +31,7 @@ if (~isempty(centers))
     radii = radii (indices, :);
 end
 
-%Criação da imagem com bounding boxes desenhadas
-%e vetor com localizações das bounding boxes
-figure(1);
-imshow(Image_gray,[]);
-hold on;
-
+%Criação de um vetor com localizações das bounding boxes
 if (~isempty(centers))
     num_circles = length(centers(:,1));
     corners = zeros (4, 2, num_circles);
@@ -69,16 +63,8 @@ if (~isempty(centers))
     %Guardar coordenadas e dimensões da bounding box
     locations(i,1:4) = [x1, y1, width, height];
 
-    %Desenhar bounding box na imagem original
-    rectangle('Position', [x1, y1, width, height], 'EdgeColor', 'g', 'LineWidth', 2);
-    end
-    
+    end  
 else
     locations = []; %se não forem detetadas células
 end
-
-hold off;
-frame = getframe(gcf);
-Image_segmented = frame.cdata;
-
 end
