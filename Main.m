@@ -1,19 +1,18 @@
-%% inicial
+%% Read Data
 clear;clc;close all;
-pasta = 'C:\Users\maria\OneDrive\Documentos\MATLAB\Train1';
-image_vector = read_data(pasta);
-size = length(image_vector{2});
+Directory = 'C:\Users\lm803\OneDrive\Ambiente de Trabalho\AIBi\2. Projeto\Train1';
+Vetor_de_Imagens = Read_Data(Directory);
+Size = length(Vetor_de_Imagens{2});
 
-%% parte 1 - Hough
-mask_vector = cell(1,size);
+%% Task1 - Hough Transform
 
-for i=1:size
-    Image = im2double(image_vector{2}{i}); 
-    mask_vector{i} = ROI_hough(Image);
-    close; %ver se da para nao abrir imagem de todo
-end
+Metrics_Table = Metrics(Vetor_de_Imagens, "ROI_Hough");
+disp(Metrics_Table)
 
-%% parte 1 - Leandro
+%% Task1 - Morphological Filters
+
+Metrics_Table = Metrics(Vetor_de_Imagens, "MorphologicalFilters");
+disp(Metrics_Table)
 
 %% pate 2 - com ROI GT
 evaluation = zeros(size,7);
