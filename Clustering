@@ -1,0 +1,28 @@
+function [Image_Out] = Clustering(Image_In)
+
+Image = im2double(Image_In);
+Image_gray = im2gray(Image);
+
+SE2 = strel('disk', 10);
+Image_bottom = imbothat(Image_gray, SE2);
+
+
+% Início do Clustering
+[m n]=kmeans(Image_bottom(:),3);
+
+colors = [0 0 0; 1 0 0; 1 1 1];
+
+m=reshape(m,size(Image_bottom,1),size(Image_bottom,2));
+Bg=labeloverlay(Image_gray,m,'Colormap',colors);
+figure
+subplot(4,1,1);
+title('Original')
+imshow(Image)
+subplot(4,1,2); %imagem a preto e branco com a deteção do clustering 
+imshow(Bg);
+title('imagem a preto e branco com a deteção do clustering')
+
+
+Image_Out=imbinarize(im2gray(Bg));
+
+end
