@@ -4,32 +4,16 @@ function [locations] = segmentation (Image, mask)
 %Devolve a localização e coordenadas das bounding boxes
 
 %Pré-processamento
-Image_gray = im2gray(Image);
-Image_gray(~mask)=0; %aplicação da máscara
-SE1 = strel('square', 25);
-Image_bothat = imbothat(Image_gray, SE1);
-T = multithresh(Image_bothat, 4);
-Image_thresh = imquantize(Image_bothat, T);
+Image_preprocessed = Preprocessing(Image);
 
 %Deteção das células
-[centers, radii] = imfindcircles(Image_thresh == 3, [15 800]); 
+[centers, radii] = imfindcircles(Image_preprocessed, [20 1000]); 
 
-% Se o extremo direito ou extremo baixo do circulo estiver fora da ROI,
+% Se o canto inferior direito da bounding box estiver fora da ROI,
 % então a célula não deve ser detetada.
 % Nesse caso, apagam-se os centros e raios correspondentes:
 
-if (~isempty(centers))
-    n = length(centers(:,1));
-    indices = true(1,n); 
-    for c = 1:n
-        if (Image_gray(round(centers(c,2)), round(centers(c,1) + radii(c))) == 0 || Image_gray(round(centers(c,2) + radii(c)), round(centers(c,1))) ==0)
-            indices(c) = false;
-        end
-    end
-    
-    centers = centers(indices, :);
-    radii = radii (indices, :);
-end
+[m n]=size(mask);
 
 %Criação de um vetor com localizações das bounding boxes
 if (~isempty(centers))
@@ -40,10 +24,10 @@ if (~isempty(centers))
         x_center = centers(i, 1);
         y_center = centers(i, 2);
     
-        x1=x_center - radii(i);
-        y1=y_center - radii(i);
-        x2=x_center + radii(i);
-        y2=y_center + radii(i);
+        x1=round(x_center - radii(i));
+        y1=round(y_center - radii(i));
+        x2=round(x_center + radii(i));
+        y2=round(y_center + radii(i));
     
         corners(:,:,i)=[x1 y1;x1 y2;x2 y1; x2 y2];    
     end
@@ -53,7 +37,12 @@ if (~isempty(centers))
     for i = 1:num_circles
     corner1 = corners(1, :, i);
     corner4 = corners(4, :, i);
-    
+   
+    if corner4(2)>m || corner4(1)>n
+        continue;
+    elseif mask(corner4(2),corner4(1))==0
+        continue;
+    end
     % Definição das dimensões da bounding box
     x1 = corner1(1);
     y1 = corner1(2);
@@ -63,8 +52,15 @@ if (~isempty(centers))
     %Guardar coordenadas e dimensões da bounding box
     locations(i,1:4) = [x1, y1, width, height];
 
-    end  
+    end
+c = size(locations, 1);
+for i = c:-1:1
+    if locations(i, 3) == 0
+        locations(i, :) = [];
+    end
+end
 else
     locations = []; %se não forem detetadas células
 end
+
 end
