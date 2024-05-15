@@ -1,11 +1,14 @@
-function [locations] = segmentation (Image, mask)
+function [locations] = segmentation (Image, mask,method)
 %Função que, após pré-processamento da imagem, deteta as células na região 
 %de interesse e determina as bounding boxes à volta das mesmas.
 %Devolve a localização e coordenadas das bounding boxes
 
 %Pré-processamento
-Image_preprocessed = Preprocessing(Image);
-
+if method=="morphological"
+    Image_preprocessed = Preprocessing(Image);
+else 
+    Image_preprocessed=Clustering(Image);
+end
 %Deteção das células
 [centers, radii] = imfindcircles(Image_preprocessed, [20 1000]); 
 
