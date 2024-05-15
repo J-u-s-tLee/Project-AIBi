@@ -16,7 +16,7 @@ disp(Metrics_Table)
 
 %% Task2 - Morphological + ROI GT
 
-Evaluation = zeros(Size,6);
+Evaluation = zeros(Size,7);
 
 for i=1:Size
     Image = Vetor_de_Imagens{2}{i};
@@ -24,8 +24,8 @@ for i=1:Size
     Cell_Location_GT = Vetor_de_Imagens{1}{i};
     [Locations] = Segmentation(Image, Mask, "Morphological");
     GT_Locations = Cell_Location_GT.cellLocationsData;
-    [TP, FP, FN, Recall, Precision, F_measure] = Segmentation_Evaluation(GT_Locations,Locations);
-    Evaluation(i,:) = [TP, FP, FN, Recall, Precision, F_measure];
+    [counted_cells, TP, FP, FN, Recall, Precision, F_measure] = Segmentation_Evaluation(GT_Locations,Locations);
+    Evaluation(i,:) = [counted_cells, TP, FP, FN, Recall, Precision, F_measure];
 
 end
 
@@ -34,7 +34,7 @@ disp (Evaluation_Table);
 
 %% Task2 - Morphological + Morphological ROI
 
-Evaluation = zeros(Size,6);
+Evaluation = zeros(Size,7);
 
 for i=1:Size
     Image = Vetor_de_Imagens{2}{i};
@@ -42,8 +42,8 @@ for i=1:Size
     Cell_Location_GT = Vetor_de_Imagens{1}{i};
     [Locations] = Segmentation(Image, Mask, "Morphological");
     GT_Locations = Cell_Location_GT.cellLocationsData;
-    [TP, FP, FN, Recall, Precision, F_measure] = Segmentation_Evaluation(GT_Locations,Locations);
-    Evaluation(i,:) = [TP, FP, FN, Recall, Precision, F_measure];
+    [counted_cells,TP, FP, FN, Recall, Precision, F_measure] = Segmentation_Evaluation(GT_Locations,Locations);
+    Evaluation(i,:) = [counted_cells,TP, FP, FN, Recall, Precision, F_measure];
 
 end
 
@@ -53,7 +53,7 @@ disp (Evaluation_Table);
 
 %% Task2 - Clustering + ROI GT
 
-Evaluation = zeros(Size,6);
+Evaluation = zeros(Size,7);
 
 for i=1:Size
     Image = Vetor_de_Imagens{2}{i};
@@ -61,9 +61,9 @@ for i=1:Size
     Cell_Location_GT = Vetor_de_Imagens{1}{i};
     [Locations] = Segmentation(Image, Mask, "Clustering");
     GT_Locations = Cell_Location_GT.cellLocationsData;
-    [TP, FP, FN, Recall, Precision, F_measure] = Segmentation_Evaluation(GT_Locations,Locations);
-    Evaluation(i,:) = [TP, FP, FN, Recall, Precision, F_measure];
-    show_detected_cells (Image, Locations)
+    [counted_cells,TP, FP, FN, Recall, Precision, F_measure] = Segmentation_Evaluation(GT_Locations,Locations);
+    Evaluation(i,:) = [counted_cells,TP, FP, FN, Recall, Precision, F_measure];
+    show_detected_cells (Image, Mask,Locations)
 
 end
 
@@ -72,7 +72,7 @@ disp (Evaluation_Table);
 
 %% Task2 - Clustering + Morphological ROI
 
-Evaluation = zeros(Size,6);
+Evaluation = zeros(Size,7);
 
 for i=1:Size
     Image = Vetor_de_Imagens{2}{i};
@@ -80,8 +80,8 @@ for i=1:Size
     Cell_Location_GT = Vetor_de_Imagens{1}{i};
     [Locations] = Segmentation(Image, Mask, "Clustering");
     GT_Locations = Cell_Location_GT.cellLocationsData;
-    [TP, FP, FN, Recall, Precision, F_measure] = Segmentation_Evaluation(GT_Locations,Locations);
-    Evaluation(i,:) = [TP, FP, FN, Recall, Precision, F_measure];
+    [counted_cells,TP, FP, FN, Recall, Precision, F_measure] = Segmentation_Evaluation(GT_Locations,Locations);
+    Evaluation(i,:) = [counted_cells,TP, FP, FN, Recall, Precision, F_measure];
 
 end
 
