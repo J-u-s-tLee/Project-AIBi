@@ -1,68 +1,105 @@
 %% Read Data
 clear;clc;close all;
-Directory = 'C:\Users\maria\OneDrive\Documentos\MATLAB\Train1';
-image_vector = read_data(Directory);
-Size = length(image_vector{2});
+Directory = 'C:\Users\lm803\OneDrive\Ambiente de Trabalho\AIBi\2. Projeto\Train1';
+Vetor_de_Imagens = Read_Data(Directory);
+Size = length(Vetor_de_Imagens{2});
 
 %% Task1 - Hough Transform
 
-Metrics_Table = Metrics(image_vector, "ROI_Hough");
+Metrics_Table = Metrics(Vetor_de_Imagens, "ROI_Hough");
 disp(Metrics_Table)
 
 %% Task1 - Morphological Filters
 
-Metrics_Table = Metrics(image_vector, "MorphologicalFilters");
+Metrics_Table = Metrics(Vetor_de_Imagens, "MorphologicalFilters");
 disp(Metrics_Table)
 
-%% parte 2 - com ROI GT
-evaluation = zeros(Size,7);
+%% Task2 - Morphological + ROI GT
+
+Evaluation = zeros(Size,6);
+
 for i=1:Size
-    Image = image_vector{2}{i};
-    mask=image_vector{3}{i};
-    locations = segmentation (Image, mask); %por quadrados em vez de circulos!!!
-    cell_location_gt = image_vector{1}{i};
-    gt_locations = cell_location_gt.cellLocationsData;
-    [counted_cells, TP, FP, FN, recall, precision, F_measure] = segmentation_evaluation(gt_locations,locations);
-    evaluation(i,:) = [counted_cells, TP, FP, FN, recall, precision, F_measure];
+    Image = Vetor_de_Imagens{2}{i};
+    Mask = Vetor_de_Imagens{3}{i}; 
+    Cell_Location_GT = Vetor_de_Imagens{1}{i};
+    [Locations] = Segmentation(Image, Mask, "Morphological");
+    GT_Locations = Cell_Location_GT.cellLocationsData;
+    [TP, FP, FN, Recall, Precision, F_measure] = Segmentation_Evaluation(GT_Locations,Locations);
+    Evaluation(i,:) = [TP, FP, FN, Recall, Precision, F_measure];
+
 end
 
-Evaluation_table = evaluation_table(evaluation);
-disp (Evaluation_table);
+Evaluation_Table = Evaluation_Table(Evaluation);
+disp (Evaluation_Table);
 
-%% parte 2 - com ROI Hough
-evaluation_extra = zeros(Size,7);
+%% Task2 - Morphological + Morphological ROI
+
+Evaluation = zeros(Size,6);
+
 for i=1:Size
-    Image = image_vector{2}{i};
-    mask = ROI_hough(Image);
-    locations = segmentation (Image, mask); %nao funciona porque a mascara nao esta no sitio certo
-    figure
-    imshow(Image_segmented); 
-    cell_location_gt = image_vector{1}{i};
-    gt_locations = cell_location_gt.cellLocationsData;
-    [TP, FP, FN, recall, precision, F_measure] = segmentation_evaluation(gt_locations,locations);
-    evaluation_extra(i,:) = [TP, FP, FN, recall, precision, F_measure];
+    Image = Vetor_de_Imagens{2}{i};
+    Mask = MorphologicalFilters(Image);
+    Cell_Location_GT = Vetor_de_Imagens{1}{i};
+    [Locations] = Segmentation(Image, Mask, "Morphological");
+    GT_Locations = Cell_Location_GT.cellLocationsData;
+    [TP, FP, FN, Recall, Precision, F_measure] = Segmentation_Evaluation(GT_Locations,Locations);
+    Evaluation(i,:) = [TP, FP, FN, Recall, Precision, F_measure];
+
 end
 
-Evaluation_table = evaluation_table(evaluation);
-disp (Evaluation_table);
+Evaluation_Table = Evaluation_Table(Evaluation);
+disp (Evaluation_Table);
 
-%% parte 2 - com ROI Leandro
-Image = image_vector{2}{8};
-mask = %leandro faz
-locations = segmentation (Image, mask);
-figure;
-imshow(Image_segmented);
 
-%% exemplo do relatório
-Image = image_vector{2}{8};
-mask_gt = image_vector{3}{8};
-locations_GT = segmentation (Image, mask_gt);
-show_detected_cells(Image, mask_gt, locations_GT);
-title('Segmentação com ROI GT');
-% mask_hough = ROI_hough(Image);
-% figure;
-% imshow(mask_hough);
-% title('ROI com Hough');
-% locations_hough = segmentation (Image, mask_hough);
-% show_detected_cells(Image, mask_hough, locations_hough);
-% title('Segmentação com ROI Hough');
+%% Task2 - Clustering + ROI GT
+
+Evaluation = zeros(Size,6);
+
+for i=1:Size
+    Image = Vetor_de_Imagens{2}{i};
+    Mask = Vetor_de_Imagens{3}{i};
+    Cell_Location_GT = Vetor_de_Imagens{1}{i};
+    [Locations] = Segmentation(Image, Mask, "Clustering");
+    GT_Locations = Cell_Location_GT.cellLocationsData;
+    [TP, FP, FN, Recall, Precision, F_measure] = Segmentation_Evaluation(GT_Locations,Locations);
+    Evaluation(i,:) = [TP, FP, FN, Recall, Precision, F_measure];
+    show_detected_cells (Image, Locations)
+
+end
+
+Evaluation_Table = Evaluation_Table(Evaluation);
+disp (Evaluation_Table);
+
+%% Task2 - Clustering + Morphological ROI
+
+Evaluation = zeros(Size,6);
+
+for i=1:Size
+    Image = Vetor_de_Imagens{2}{i};
+    Mask = MorphologicalFilters(Image);
+    Cell_Location_GT = Vetor_de_Imagens{1}{i};
+    [Locations] = Segmentation(Image, Mask, "Clustering");
+    GT_Locations = Cell_Location_GT.cellLocationsData;
+    [TP, FP, FN, Recall, Precision, F_measure] = Segmentation_Evaluation(GT_Locations,Locations);
+    Evaluation(i,:) = [TP, FP, FN, Recall, Precision, F_measure];
+
+end
+
+Evaluation_Table = Evaluation_Table(Evaluation);
+disp (Evaluation_Table);
+
+%% Example
+
+index = 16;
+Image = Vetor_de_Imagens{2}{index};
+Mask_Morph = MorphologicalFilters(Image);
+Mask_GT = Vetor_de_Imagens{3}{index};
+Cells_GT = Vetor_de_Imagens{1}{index};
+Locations_Morph = Segmentation(Image, Mask_GT, "Morphological");
+show_detected_cells (Image, Locations_Morph)
+
+figure
+imshow(Image)
+for i=1:length(Cells_GT.cellLocationsData)
+        rectangle('Position', [Cells_GT.cellLocationsData(i,1), Cells_GT.cellLocationsData(i,2), Cells_GT.cellLocationsData(i,3), Cells_GT.cellLocationsData(i,4)], 'EdgeColor', 'b', 'LineWidth', 1);  
+end
