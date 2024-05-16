@@ -1,7 +1,7 @@
 function [Image_Out] = Morphological(Image_In)
 
     Image_gray = im2gray(im2double(Image_In));
-    SE1 = strel('disk', 50);
+    SE1 = strel('disk', 51);
     Image_bothat = imbothat(Image_gray, SE1);
     T = multithresh(Image_bothat, 7);
     Image_thresh = imquantize(Image_bothat, T);
