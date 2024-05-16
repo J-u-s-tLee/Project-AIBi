@@ -97,9 +97,3 @@ Mask_GT = Vetor_de_Imagens{3}{index};
 Cells_GT = Vetor_de_Imagens{1}{index};
 Locations_Morph = Segmentation(Image, Mask_GT, "Morphological");
 Show_Detected_Cells (Image, Locations_Morph)
-
-figure
-imshow(Image)
-for i=1:length(Cells_GT.cellLocationsData)
-        rectangle('Position', [Cells_GT.cellLocationsData(i,1), Cells_GT.cellLocationsData(i,2), Cells_GT.cellLocationsData(i,3), Cells_GT.cellLocationsData(i,4)], 'EdgeColor', 'b', 'LineWidth', 1);  
-end
