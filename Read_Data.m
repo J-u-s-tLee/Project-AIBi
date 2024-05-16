@@ -1,7 +1,7 @@
+function Vetores_de_Imagens = Read_Data(Pasta_Principal)
 % Criação de um vetor de 3 vetores de imagens onde são armazendas 
 % todas as imagens originais, os GT do ROI e os GT da segmentaçao
 
-function Vetores_de_Imagens = Read_Data(Pasta_Principal)
 subpastas = {'cells1', 'images1', 'ROIs1'};
 Vetores_de_Imagens = cell(1,3);
 
