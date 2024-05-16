@@ -1,4 +1,4 @@
-function [counted_cells, TP, FP, FN, recall, precision, F_measure] = segmentation_evaluation(gt_locations, locations)
+function [counted_cells, TP, FP, FN, recall, precision, F_measure] = Segmentation_Evaluation(gt_locations, locations)
 % Funçao que compara as bounding boxes determinadas pelo código e
 % fornecidas pela docente, considerando as últimas como GT.
 % Devolve os valores de verdadeiros positivos (TP), falsos positiovs (FP),
